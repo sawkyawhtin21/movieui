@@ -3,18 +3,27 @@ package com.blogapp.aws.movieuitemplate.ui;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.blogapp.aws.movieuitemplate.R;
+import com.blogapp.aws.movieuitemplate.adapters.CastAdapter;
+import com.blogapp.aws.movieuitemplate.models.Cast;
 import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
     private ImageView MovieThumbnailImg,MovieCoverImg;
     private TextView tv_title,tv_description;
     private FloatingActionButton play_fab;
+    private RecyclerView RvCast;
+    private CastAdapter castAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +31,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_detail);
         // ini views
         iniViews();
+        //  setup list cast
+        setupRvCast();
 
 
 
@@ -29,6 +40,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     void iniViews() {
+        RvCast = findViewById(R.id.rv_cast);
         play_fab = findViewById(R.id.play_fab);
         String movieTitle = getIntent().getExtras().getString("title");
         int imageResourceId = getIntent().getExtras().getInt("imgURL");
@@ -49,6 +61,20 @@ public class MovieDetailActivity extends AppCompatActivity {
 
 
 
+
+    }
+
+    void setupRvCast () {
+        List<Cast> mdata = new ArrayList<>();
+        mdata.add(new Cast("name",R.drawable.scoob));
+        mdata.add(new Cast("name",R.drawable.rogue));
+        mdata.add(new Cast("name",R.drawable.blackp));
+        mdata.add(new Cast("name",R.drawable.scoob));
+        mdata.add(new Cast("name",R.drawable.scoob));
+
+        castAdapter = new CastAdapter(this,mdata);
+        RvCast.setAdapter(castAdapter);
+        RvCast.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
 
     }
 

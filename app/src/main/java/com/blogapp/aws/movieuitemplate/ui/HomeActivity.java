@@ -17,6 +17,7 @@ import com.blogapp.aws.movieuitemplate.adapters.MovieItemClickListener;
 import com.blogapp.aws.movieuitemplate.R;
 import com.blogapp.aws.movieuitemplate.models.Slide;
 import com.blogapp.aws.movieuitemplate.adapters.SliderPagerAdapter;
+import com.blogapp.aws.movieuitemplate.utils.DataSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,17 +29,40 @@ public class HomeActivity extends AppCompatActivity implements MovieItemClickLis
     private List<Slide> lstSlides ;
     private ViewPager sliderpager;
     private TabLayout indicator;
-    private RecyclerView MoviesRV ;
+    private RecyclerView MoviesRV,moviesRvWeek;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        sliderpager = findViewById(R.id.slider_pager) ;
-        indicator = findViewById(R.id.indicator);
-        MoviesRV = findViewById(R.id.Rv_movies);
+        iniViews();
+        iniSlider();
+        iniPopularMovies();
+        iniWeekMovies();
 
+
+    }
+
+    private void iniWeekMovies() {
+
+        MovieAdapter weekMovieAdapter = new MovieAdapter(this,DataSource.getWeekMovies(),this);
+        moviesRvWeek.setAdapter(weekMovieAdapter);
+        moviesRvWeek.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+    }
+
+    private void iniPopularMovies() {
+        // Recyclerview Setup
+        // ini data
+
+
+
+        MovieAdapter movieAdapter = new MovieAdapter(this, DataSource.getPopularMovies(),this);
+        MoviesRV.setAdapter(movieAdapter);
+        MoviesRV.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+    }
+
+    private void iniSlider() {
         // prepare a list of slides ..
         lstSlides = new ArrayList<>() ;
         lstSlides.add(new Slide(R.drawable.slide1,"Slide Title \nmore text here"));
@@ -49,28 +73,15 @@ public class HomeActivity extends AppCompatActivity implements MovieItemClickLis
         sliderpager.setAdapter(adapter);
         // setup timer
         Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new HomeActivity.SliderTimer(),4000,6000);
+        timer.scheduleAtFixedRate(new SliderTimer(),4000,6000);
         indicator.setupWithViewPager(sliderpager,true);
+    }
 
-        // Recyclerview Setup
-        // ini data
-
-        List<Movie> lstMovies = new ArrayList<>();
-        lstMovies.add(new Movie("Moana",R.drawable.moana,R.drawable.spidercover));
-        lstMovies.add(new Movie("Black P",R.drawable.blackp,R.drawable.spidercover));
-        lstMovies.add(new Movie("The Martian",R.drawable.themartian));
-        lstMovies.add(new Movie("The Martian",R.drawable.themartian));
-        lstMovies.add(new Movie("The Martian",R.drawable.themartian));
-        lstMovies.add(new Movie("The Martian",R.drawable.themartian));
-
-        MovieAdapter movieAdapter = new MovieAdapter(this,lstMovies,this);
-        MoviesRV.setAdapter(movieAdapter);
-        MoviesRV.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
-
-
-
-
-
+    private void iniViews() {
+        sliderpager = findViewById(R.id.slider_pager) ;
+        indicator = findViewById(R.id.indicator);
+        MoviesRV = findViewById(R.id.Rv_movies);
+        moviesRvWeek = findViewById(R.id.rv_movies_week);
     }
 
     @Override
